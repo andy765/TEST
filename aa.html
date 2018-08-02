@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下拉菜单模拟</title>
+    <script src="vue.js"></script>
+    <script src="vue-resource.js"></script>
+
+</head>
+<body>
+<div id="box">
+    <input type="text" v-model="t1" @keyup="get()">
+    <ul>
+        <li v-for="value in myData">
+            {{value}}
+        </li>
+    </ul>
+    <p v-show="myData.length==0">暂无数据...</p>
+</div>
+<script>
+    new Vue({
+        el:'#box',
+        data:{
+            myData:[],
+            t1:''
+        },
+        methods:{
+            get:function(){
+                this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+                    wd:'a'
+                },{
+                    jsonp:'cb'
+                }).then(function(res){
+                    alert(res.data.s);
+                },function(res){
+
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>
+<!--https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=a&cb=jshow-->

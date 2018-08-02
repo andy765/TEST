@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue-resource.js"></script>
+    <script src="vue.js"></script>
+    <script>
+        window.onload = function(){
+            Vue.filter('data',function(input){
+                var oDate = new Date(input);
+                return oDate.getFullYear() + '-'+oDate.getMonth()+'-'+oDate.getDay()+'-'+oDate.getHours()+':'+oDate.getMinutes()+':'+oDate.getSeconds();
+            });
+            var vm = new Vue({
+                data:{
+                    a:Date.now()
+                }
+            }).$mount('#box');
+        };
+    </script>
+</head>
+<body>
+<div id="box">
+    {{a | data }}
+</div>
+</body>
+</html>

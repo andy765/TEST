@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下拉菜单模拟</title>
+    <script src="vue.js"></script>
+    <script src="vue-resource.js"></script>
+    <style>
+        .gray{
+            background-color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <input type="text" v-model="t1" @keyup="get($event)" @keydown.down="changedown()" @keydown.up.prevent="changeup()">
+        <ul>
+            <li v-for="(value,index) in myData" :class="{gray:index==now}">
+                {{value}}
+            </li>
+        </ul>
+        <p v-show="myData.length==0">暂无数据...</p>
+    </div>
+    <script>
+        new Vue({
+            el:'#box',
+            data:{
+                myData:[],
+                t1:' ',
+                now:-1
+            },
+            methods:{
+                get:function(ev){
+                    if(ev.keyCode==38 || ev.keyCode==40) return;   //阻止get函数的反复执行
+                    this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+                        params:{
+                            wd:this.t1
+                        },
+                        jsonp:'cb'
+                    }).then(function(res){
+                        this.myData = res.data.s;
+                    },function(res){
+
+                    });
+                },
+                changedown:function(){
+                    this.now++;
+                    if(this.now==this.myData.length) this.now=-1;
+                    this.t1=this.myData[this.now];
+                },
+                changeup:function(){
+                    this.now--;
+                    if(this.now==-2) this.now = this.myData.length -1;
+                    this.t1=this.myData[this.now];
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+<!--
+https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=a&cb=jshow-->
+<!--
+    实践总结
+    一、步骤：
+    1.首先创建input和li标签，引入相关引用，创建vue实例
+    2.点击input时让li的内容展示出来（运用v-for循环展示）
+    3.书写方法methods，keyup（），keydown.down(),keydown.up()，切记默认事件的阻止
+    4.下拉框展示效果优化
+-->
